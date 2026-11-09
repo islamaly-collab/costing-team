@@ -1330,6 +1330,29 @@ setTimeout(() => {
 // ── FORM SUBMIT ──
 function submitForm(e) {
   e.preventDefault();
+  const form = e.target;
+  const inputs = form.querySelectorAll('input, select, textarea');
+  const name      = inputs[0].value.trim();
+  const phone     = inputs[1].value.trim();
+  const email     = inputs[2].value.trim();
+  const company   = inputs[3].value.trim();
+  const challenge = inputs[4].value.trim();
+  const notes     = inputs[5].value.trim();
+
+  const lines = [
+    '📋 *طلب استشارة مجانية — Costing Team*',
+    '',
+    `👤 *الاسم:* ${name}`,
+    `📞 *الهاتف:* ${phone}`,
+    email  ? `📧 *الإيميل:* ${email}` : '',
+    `🏢 *الشركة:* ${company}`,
+    `⚠️ *أكبر تحدي:* ${challenge}`,
+    notes  ? `📝 *ملاحظات:* ${notes}` : '',
+  ].filter(Boolean).join('\n');
+
+  const waUrl = 'https://wa.me/201142877296?text=' + encodeURIComponent(lines);
+  window.open(waUrl, '_blank');
+
   const card = document.getElementById('form-card');
   card.innerHTML = `
     <div class="form-success">
