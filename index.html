@@ -1,0 +1,1268 @@
+<title>Costing Team — هيكل التكاليف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap">
+
+<style>
+:root {
+  --dark:    #07101E;
+  --dark2:   #0B1A2F;
+  --dark3:   #102240;
+  --gold:    #E8A619;
+  --gold2:   #CF9315;
+  --light:   #F2F6FC;
+  --white:   #FFFFFF;
+  --text:    #0A1628;
+  --muted:   #546A85;
+  --border:  #D6E0EE;
+  --blue:    #2563EB;
+  --green:   #16A34A;
+  --r:       12px;
+  --r-sm:    7px;
+  --shadow:  0 2px 8px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Cairo', system-ui, sans-serif;
+  direction: rtl;
+  color: var(--text);
+  background: var(--white);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ── UTILS ── */
+.container { max-width: 1100px; margin: 0 auto; padding-inline: max(20px, env(safe-area-inset-right,0px)); }
+.section-label {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+}
+.section-label::before, .section-label::after {
+  content: ''; width: 28px; height: 1.5px; background: var(--gold); opacity: .5;
+}
+h2.section-h {
+  font-size: clamp(26px, 4vw, 38px); font-weight: 900; line-height: 1.2;
+  text-wrap: balance; margin-bottom: 16px;
+}
+h2.section-h span { color: var(--gold); }
+.section-sub { font-size: 16px; color: var(--muted); max-width: 560px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; border-radius: var(--r-sm); font-size: 15px;
+  font-weight: 800; border: none; transition: all .18s; white-space: nowrap;
+}
+.btn-gold { background: var(--gold); color: var(--dark); }
+.btn-gold:hover { background: var(--gold2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,166,25,.4); }
+.btn-outline { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,.35); }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-dark { background: var(--dark); color: var(--white); }
+.btn-dark:hover { background: var(--dark2); }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; inset-inline: 0; z-index: 100;
+  transition: all .25s;
+  padding: 18px 0;
+}
+nav.scrolled {
+  background: rgba(7,16,30,.96);
+  backdrop-filter: blur(14px);
+  padding: 12px 0;
+  box-shadow: 0 2px 20px rgba(0,0,0,.3);
+}
+.nav-inner { display: flex; align-items: center; gap: 20px; }
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-logo-icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.nav-logo-name { color: var(--white); font-weight: 900; font-size: 17px; letter-spacing: -.3px; }
+.nav-logo-sub  { color: rgba(255,255,255,.5); font-size: 11px; }
+.nav-links { display: flex; gap: 4px; margin-right: auto; }
+.nav-link {
+  padding: 7px 14px; border-radius: var(--r-sm); font-size: 14px; font-weight: 600;
+  color: rgba(255,255,255,.75); border: none; background: none; transition: all .15s;
+}
+.nav-link:hover { color: var(--white); background: rgba(255,255,255,.08); }
+.nav-cta { margin-right: 8px; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh; background: var(--dark);
+  padding-top: 90px;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.hero-grid {
+  position: absolute; inset: 0; opacity: .05;
+  background-image: linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+.hero-glow {
+  position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,166,25,.18) 0%, transparent 70%);
+  top: -150px; left: -100px; pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; padding: 60px 0 40px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50px; padding: 7px 16px; margin-bottom: 28px;
+  font-size: 12px; font-weight: 700; color: rgba(255,255,255,.8);
+}
+.hero-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #22C55E;
+  box-shadow: 0 0 8px rgba(34,197,94,.8);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .6; transform: scale(.85); }
+}
+.hero h1 {
+  font-size: clamp(32px, 5.5vw, 60px); font-weight: 900; color: var(--white);
+  line-height: 1.1; text-wrap: balance; margin-bottom: 20px; letter-spacing: -.5px;
+}
+.hero h1 span { color: var(--gold); }
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px); color: rgba(255,255,255,.65);
+  max-width: 580px; margin-bottom: 36px; line-height: 1.7;
+}
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 60px; }
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 1px; background: rgba(255,255,255,.08);
+  border-radius: var(--r); overflow: hidden; margin-top: 20px;
+}
+.hero-stat {
+  background: rgba(255,255,255,.04); padding: 20px;
+  text-align: center;
+  border-top: 2px solid transparent;
+  transition: border-color .2s;
+}
+.hero-stat:hover { border-top-color: var(--gold); }
+.hero-stat-num {
+  font-size: 28px; font-weight: 900; color: var(--gold);
+  line-height: 1; margin-bottom: 4px;
+}
+.hero-stat-lbl { font-size: 12px; color: rgba(255,255,255,.5); font-weight: 600; }
+
+/* ── PAIN ── */
+.pain { background: var(--light); padding: 80px 0; }
+.pain-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 12px; margin-top: 40px; }
+.pain-card {
+  background: var(--white); border-radius: var(--r); padding: 22px 20px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+  transition: all .2s; position: relative; overflow: hidden;
+}
+.pain-card::before {
+  content: ''; position: absolute; bottom: 0; right: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg,var(--gold),var(--gold2)); transform: scaleX(0);
+  transform-origin: right; transition: transform .25s;
+}
+.pain-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.pain-card:hover::before { transform: scaleX(1); }
+.pain-icon { font-size: 26px; margin-bottom: 12px; }
+.pain-title { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+.pain-desc  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ── SERVICES ── */
+.services { padding: 90px 0; background: var(--white); }
+.services-top { display: flex; align-items: flex-end; gap: 20px; justify-content: space-between; margin-bottom: 48px; }
+.srv-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+.srv-card {
+  border-radius: var(--r); padding: 32px 28px;
+  border: 1px solid var(--border); position: relative;
+  transition: all .2s; overflow: hidden; background: var(--white);
+}
+.srv-card { cursor: pointer; }
+.srv-card:not(.featured):hover, .srv-card:not(.featured):focus-within {
+  background: linear-gradient(135deg,var(--dark) 0%, var(--dark2) 100%);
+  border-color: var(--gold);
+  box-shadow: 0 8px 32px rgba(232,166,25,.2);
+  transform: translateY(-3px);
+  color: var(--white);
+}
+.srv-card:not(.featured):hover .srv-desc,
+.srv-card:not(.featured):focus-within .srv-desc { color: rgba(255,255,255,.6); }
+.srv-card:not(.featured):hover .srv-tag,
+.srv-card:not(.featured):focus-within .srv-tag { background: rgba(255,255,255,.08); color: rgba(255,255,255,.75); border-color: rgba(255,255,255,.12); }
+.srv-num {
+  font-size: 11px; font-weight: 900; letter-spacing: 2px; color: var(--gold);
+  margin-bottom: 16px; display: block;
+}
+.srv-icon { font-size: 32px; margin-bottom: 14px; }
+.srv-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
+.srv-desc  { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.srv-tags  { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.srv-tag {
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  border-radius: 20px; background: var(--light); color: var(--muted);
+  border: 1px solid var(--border);
+}
+.srv-card.featured {
+  background: linear-gradient(135deg,var(--dark) 0%, var(--dark2) 100%);
+  border-color: transparent; color: var(--white);
+}
+.srv-card.featured .srv-desc { color: rgba(255,255,255,.6); }
+.srv-card.featured .srv-tag  { background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); border-color: rgba(255,255,255,.12); }
+
+/* ── CLIENTS NETWORK ── */
+.clients-net { padding: 90px 0; background: var(--dark); overflow: hidden; position: relative; }
+.clients-net-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.clients-net-text { order: 2; }
+.clients-net-text .section-label { color: var(--gold); border-color: rgba(232,166,25,.25); }
+.clients-net-text h2 { color: var(--white); font-size: clamp(28px, 4vw, 48px); line-height: 1.25; margin-bottom: 20px; }
+.clients-net-text h2 span { color: var(--gold); }
+.clients-net-text p { color: rgba(255,255,255,.6); font-size: 15px; line-height: 1.8; margin-bottom: 36px; }
+.clients-net-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+.cn-stat-val { font-size: 36px; font-weight: 900; color: var(--gold); font-family: 'Cairo', sans-serif; line-height: 1; }
+.cn-stat-lbl { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px; }
+
+/* bubble field */
+.clients-bubbles { order: 1; position: relative; height: 480px; }
+.cb { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Cairo', sans-serif; font-weight: 800; cursor: default; user-select: none; transition: transform .3s, box-shadow .3s; }
+.cb:hover { transform: scale(1.1) !important; box-shadow: 0 8px 32px rgba(232,166,25,.4) !important; z-index: 10; }
+.cb-txt { font-size: 11px; text-align: center; line-height: 1.3; padding: 4px; }
+@keyframes float1 { 0%,100%{transform:translateY(0px) rotate(0deg)} 33%{transform:translateY(-14px) rotate(1deg)} 66%{transform:translateY(6px) rotate(-1deg)} }
+@keyframes float2 { 0%,100%{transform:translateY(0px)} 40%{transform:translateY(10px)} 80%{transform:translateY(-8px)} }
+@keyframes float3 { 0%,100%{transform:translateY(0px) translateX(0px)} 50%{transform:translateY(-10px) translateX(5px)} }
+@keyframes float4 { 0%,100%{transform:translateY(0px) translateX(0px)} 50%{transform:translateY(8px) translateX(-4px)} }
+@media(max-width:768px) {
+  .clients-net-inner { grid-template-columns: 1fr; }
+  .clients-net-text { order: 1; }
+  .clients-bubbles { order: 2; height: 320px; }
+}
+
+/* ── PREVIEW MOCKUP ── */
+.preview { padding: 90px 0; background: #F5F8FD; }
+.mock-wrap {
+  background: #EEF2FA; border-radius: 18px; overflow: hidden;
+  border: 1px solid var(--border); box-shadow: 0 24px 64px rgba(7,16,30,.14);
+}
+.mock-topbar {
+  background: var(--dark); padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.mock-topbar-logo { display: flex; align-items: center; gap: 10px; color: var(--white); font-size: 13px; font-weight: 700; }
+.mock-topbar-ic {
+  width: 26px; height: 26px; border-radius: 6px; background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 900; color: var(--dark);
+}
+.mock-topbar-date { font-size: 11px; color: rgba(255,255,255,.4); }
+.mock-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); }
+.mock-kpi { background: var(--white); padding: 20px 18px; }
+.mock-kpi.hl { background: var(--dark); }
+.mock-kpi-lbl { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+.mock-kpi.hl .mock-kpi-lbl { color: rgba(255,255,255,.45); }
+.mock-kpi-val { font-size: 20px; font-weight: 900; color: var(--text); margin-bottom: 4px; }
+.mock-kpi.hl .mock-kpi-val { color: var(--gold); }
+.mock-kpi-trend { font-size: 11px; color: var(--muted); }
+.mock-kpi-trend.up { color: #16A34A; } .mock-kpi-trend.dn { color: #DC2626; }
+.mock-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 1px; background: var(--border); }
+.mock-panel { background: var(--white); padding: 22px 22px; }
+.mock-panel-title { font-size: 12px; font-weight: 800; color: var(--text); margin-bottom: 18px; letter-spacing: .3px; }
+.mock-bars { display: flex; flex-direction: column; gap: 13px; }
+.mock-bar-row { display: flex; align-items: center; gap: 10px; }
+.mock-bar-lbl { font-size: 12px; color: var(--muted); min-width: 105px; text-align: right; }
+.mock-track { flex:1; height: 8px; background: var(--light); border-radius: 4px; overflow: hidden; }
+.mock-fill { height: 100%; border-radius: 4px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+.mock-pct { font-size: 12px; font-weight: 700; color: var(--text); min-width: 30px; }
+.mock-tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.mock-tbl th { text-align: right; padding: 7px 8px; color: var(--muted); font-size: 10px; font-weight: 700; border-bottom: 1px solid var(--border); }
+.mock-tbl td { padding: 9px 8px; border-bottom: 1px solid #F0F4FA; color: var(--text); }
+.mock-tbl tr:last-child td { border: none; }
+.mock-badge { display:inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; background: var(--light); color: var(--muted); }
+.mock-badge.g { background: rgba(232,166,25,.12); color: #A87200; }
+.mock-badge.b { background: rgba(37,99,235,.1); color: #1E50C0; }
+.mock-bottombar {
+  background: var(--dark); padding: 10px 24px;
+  display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.35);
+}
+/* tabs */
+.mock-tabs { display:flex; gap:0; background: #0F1E32; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.mock-tab {
+  padding: 11px 18px; font-size: 12px; font-weight: 700; border: none; cursor: pointer;
+  background: none; color: rgba(255,255,255,.45); border-bottom: 2px solid transparent;
+  font-family: inherit; transition: all .15s;
+}
+.mock-tab:hover { color: rgba(255,255,255,.75); }
+.mock-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+/* P&L table */
+.pl-wrap { background: var(--white); padding: 24px 28px; overflow-x: auto; }
+.pl-tbl { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 560px; }
+.pl-tbl th { padding: 8px 12px; font-size: 10px; font-weight: 800; color: var(--muted); border-bottom: 2px solid var(--border); text-align: left; letter-spacing: .5px; }
+.pl-tbl th:first-child { text-align: right; min-width: 180px; }
+.pl-tbl td { padding: 7px 12px; border-bottom: 1px solid #F3F6FB; color: var(--text); text-align: left; font-size: 12px; }
+.pl-tbl td:first-child { text-align: right; color: var(--text); }
+.pl-tbl tr.section-hdr td { background: #F0F4FA; font-weight: 800; font-size: 11px; color: var(--muted); letter-spacing: .5px; padding: 10px 12px; }
+.pl-tbl tr.subtotal td { background: #F7F9FC; font-weight: 800; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pl-tbl tr.total td { background: var(--dark); color: var(--white); font-weight: 900; font-size: 13px; }
+.pl-tbl tr.total td:first-child { color: var(--gold); }
+.pl-tbl tr.margin td { font-size: 11px; color: var(--muted); font-style: italic; }
+.pl-tbl tr.margin td.pos { color: #16A34A; font-weight: 700; }
+.pl-tbl td.pos { color: #16A34A; font-weight: 700; }
+.pl-tbl td.neg { color: #DC2626; }
+.pl-tbl td.gold { color: var(--gold); font-weight: 800; }
+@media (max-width: 700px) {
+  .mock-kpis { grid-template-columns: repeat(2,1fr); }
+  .mock-body { grid-template-columns: 1fr; }
+}
+
+/* ── DASHBOARD DYNAMIC ── */
+.dash-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); }
+.dash-kpi { background:var(--white); padding:18px 20px; }
+.dash-kpi.dk { background:var(--dark); }
+.dash-kpi-lbl { font-size:10px; font-weight:700; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; }
+.dash-kpi.dk .dash-kpi-lbl { color:rgba(255,255,255,.4); }
+.dash-kpi-val { font-size:22px; font-weight:900; color:var(--text); line-height:1; margin-bottom:8px; }
+.dash-kpi.dk .dash-kpi-val { color:var(--gold); }
+.dash-kpi-row { display:flex; align-items:center; gap:6px; }
+.dash-pill { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
+.dash-pill.up { background:rgba(22,163,74,.1); color:#16A34A; }
+.dash-pill.dn { background:rgba(220,38,38,.08); color:#DC2626; }
+.dash-pill.ok { background:rgba(232,166,25,.12); color:#A87200; }
+.dash-charts { display:grid; grid-template-columns:1.2fr 1fr; gap:1px; background:var(--border); }
+.dash-panel { background:var(--white); padding:22px 24px; }
+.dash-panel-ttl { font-size:10px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:18px; }
+.dash-hbars { display:flex; flex-direction:column; gap:12px; }
+.dash-hbar-row { display:grid; grid-template-columns:110px 1fr 44px; align-items:center; gap:10px; }
+.dash-hbar-lbl { font-size:11px; color:var(--muted); text-align:right; }
+.dash-htrack { height:10px; background:#EEF2FA; border-radius:5px; overflow:hidden; }
+.dash-hfill { height:100%; border-radius:5px; width:0; transition:width 1.3s cubic-bezier(.4,0,.2,1); }
+.dash-hpct { font-size:11px; font-weight:800; }
+.dash-trend { display:flex; align-items:flex-end; gap:5px; height:100px; }
+.dash-mbar { flex:1; border-radius:3px 3px 0 0; height:0; transition:height 1.1s cubic-bezier(.34,1.4,.64,1); position:relative; cursor:pointer; }
+.dash-mbar:hover { filter:brightness(1.15); }
+.dash-mbar .tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:var(--dark); color:var(--white); font-size:9px; font-weight:700; padding:4px 7px; border-radius:5px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .12s; z-index:5; }
+.dash-mbar:hover .tip { opacity:1; }
+.dash-mlbls { display:flex; gap:5px; margin-top:6px; }
+.dash-mlbl { flex:1; text-align:center; font-size:8px; color:var(--muted); }
+.dash-insights { background:#F7F9FC; padding:14px 24px; display:flex; gap:20px; flex-wrap:wrap; border-top:1px solid var(--border); }
+.dash-insight { display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text); font-weight:600; }
+.dash-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+@media(max-width:700px) {
+  .dash-kpis { grid-template-columns:repeat(2,1fr); }
+  .dash-charts { grid-template-columns:1fr; }
+}
+
+/* ── RESULTS ── */
+.results { background: var(--dark); padding: 90px 0; }
+.results h2.section-h { color: var(--white); }
+.results .section-sub { color: rgba(255,255,255,.55); }
+.res-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin-top: 50px; background: rgba(255,255,255,.06); border-radius: var(--r); overflow: hidden; }
+.res-item {
+  padding: 36px 24px; text-align: center;
+  background: rgba(255,255,255,.03); position: relative;
+  transition: background .2s;
+}
+.res-item:hover { background: rgba(232,166,25,.08); }
+.res-num {
+  font-size: 48px; font-weight: 900; color: var(--gold); line-height: 1;
+  margin-bottom: 8px; font-variant-numeric: tabular-nums;
+}
+.res-label { font-size: 14px; color: rgba(255,255,255,.65); font-weight: 600; }
+.res-footnote { font-size: 11px; color: rgba(255,255,255,.25); text-align: center; margin-top: 20px; }
+
+/* ── PROCESS ── */
+.process { padding: 90px 0; background: var(--light); }
+.process-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; margin-top: 50px; position: relative; }
+.process-steps::before {
+  content: ''; position: absolute; top: 38px; right: 12.5%; left: 12.5%;
+  height: 2px; background: linear-gradient(90deg,var(--gold),var(--gold2));
+  opacity: .3; pointer-events: none;
+}
+.step { text-align: center; padding: 0 16px; position: relative; }
+.step-circle {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--white); border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; font-size: 20px;
+  box-shadow: var(--shadow); position: relative; z-index: 1;
+  transition: all .2s;
+}
+.step:hover .step-circle { border-color: var(--gold); box-shadow: 0 4px 16px rgba(232,166,25,.3); }
+.step-num { font-size: 10px; font-weight: 900; letter-spacing: 1px; color: var(--gold); margin-bottom: 8px; }
+.step-title { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+.step-desc  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ── SECTORS ── */
+.sectors { padding: 70px 0; background: var(--white); }
+.sector-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; justify-content: center; }
+.sector-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 50px;
+  border: 1px solid var(--border); font-size: 14px; font-weight: 700;
+  transition: all .15s; background: var(--light);
+}
+.sector-pill:hover { border-color: var(--gold); background: rgba(232,166,25,.06); color: var(--dark); }
+
+/* ── CTA BANNER ── */
+.cta-banner {
+  background: linear-gradient(135deg, var(--dark2) 0%, var(--dark3) 50%, #0D2545 100%);
+  padding: 80px 0; position: relative; overflow: hidden;
+}
+.cta-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(232,166,25,.12) 0%, transparent 70%);
+}
+.cta-banner-inner { position: relative; z-index: 1; text-align: center; }
+.cta-banner h2 { color: var(--white); font-size: clamp(24px,4vw,38px); font-weight: 900; margin-bottom: 12px; text-wrap: balance; }
+.cta-banner p  { color: rgba(255,255,255,.6); font-size: 16px; margin-bottom: 32px; }
+.cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ── CONTACT ── */
+.contact { padding: 90px 0; background: var(--light); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: start; margin-top: 48px; }
+.contact-info h3 { font-size: 20px; font-weight: 900; margin-bottom: 10px; }
+.contact-info p  { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 28px; }
+.contact-items { display: flex; flex-direction: column; gap: 14px; }
+.contact-item {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 14px; font-weight: 600;
+}
+.contact-item-ic {
+  width: 38px; height: 38px; border-radius: 9px; flex-shrink: 0;
+  background: rgba(232,166,25,.12); border: 1px solid rgba(232,166,25,.2);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.contact-item-val { font-size: 14px; color: var(--muted); }
+.form-card {
+  background: var(--white); border-radius: var(--r);
+  padding: 32px; box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+}
+.form-title { font-size: 17px; font-weight: 900; margin-bottom: 20px; }
+.fg { margin-bottom: 14px; }
+.fg label { display: block; font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.fg input, .fg select, .fg textarea {
+  width: 100%; padding: 11px 13px; border-radius: var(--r-sm);
+  border: 1.5px solid var(--border); background: var(--light);
+  color: var(--text); font-family: inherit; font-size: 14px; direction: rtl;
+  transition: border-color .15s;
+}
+.fg input:focus, .fg select:focus, .fg textarea:focus {
+  outline: none; border-color: var(--gold); background: var(--white);
+}
+.fg textarea { resize: vertical; min-height: 90px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-success {
+  text-align: center; padding: 32px 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.form-success-icon { font-size: 48px; }
+.form-success h3  { font-size: 18px; font-weight: 900; }
+.form-success p   { color: var(--muted); font-size: 14px; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark); padding: 48px 0 24px;
+  color: rgba(255,255,255,.5);
+}
+.footer-top { display: flex; gap: 40px; justify-content: space-between; align-items: flex-start; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,.07); margin-bottom: 24px; flex-wrap: wrap; }
+.footer-brand { max-width: 280px; }
+.footer-brand-name { color: var(--white); font-weight: 900; font-size: 18px; margin-bottom: 10px; }
+.footer-brand-desc { font-size: 13px; line-height: 1.7; }
+.footer-links h4 { color: var(--white); font-size: 13px; font-weight: 800; margin-bottom: 12px; letter-spacing: .5px; }
+.footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { font-size: 13px; transition: color .15s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12px; flex-wrap: wrap; gap: 10px; }
+.footer-bottom span { color: rgba(255,255,255,.25); }
+
+/* ── ANIMATE IN ── */
+.fade-up { opacity: 0; transform: translateY(28px); transition: opacity .6s, transform .6s; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .srv-grid       { grid-template-columns: 1fr; }
+  .res-grid       { grid-template-columns: repeat(2,1fr); }
+  .process-steps  { grid-template-columns: repeat(2,1fr); gap: 24px; }
+  .process-steps::before { display: none; }
+  .contact-grid   { grid-template-columns: 1fr; }
+  .hero-stats     { grid-template-columns: repeat(2,1fr); }
+  .nav-links      { display: none; }
+  .footer-top     { flex-direction: column; gap: 28px; }
+}
+@media (max-width: 600px) {
+  .pain-grid { grid-template-columns: 1fr 1fr; }
+  .res-grid  { grid-template-columns: 1fr 1fr; }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .form-row  { grid-template-columns: 1fr; }
+  .hero-btns { flex-direction: column; align-items: flex-start; }
+  .cta-btns  { flex-direction: column; align-items: center; }
+  .hero-stats { grid-template-columns: repeat(2,1fr); }
+  .services-top { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 400px) {
+  .pain-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <div class="nav-logo-icon">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="42" height="42" rx="10" fill="#07101E"/>
+            <rect x="7" y="29" width="7" height="9" rx="2" fill="#E8A619" opacity=".65"/>
+            <rect x="17" y="22" width="7" height="16" rx="2" fill="#E8A619" opacity=".65"/>
+            <rect x="27" y="15" width="7" height="23" rx="2" fill="#E8A619" opacity=".65"/>
+            <rect x="5" y="38.5" width="32" height="1.2" rx=".6" fill="#E8A619" opacity=".3"/>
+            <line x1="7" y1="35" x2="32" y2="7" stroke="#E8A619" stroke-width="2.2" stroke-linecap="round"/>
+            <polygon points="32,7 24,11 29,15" fill="#E8A619"/>
+          </svg>
+        </div>
+        <div>
+          <div class="nav-logo-name">Costing Team</div>
+          <div class="nav-logo-sub">Cost Consulting</div>
+        </div>
+      </a>
+      <div class="nav-links">
+        <button class="nav-link" onclick="navTo('#pain')">المشكلة</button>
+        <button class="nav-link" onclick="navTo('#services')">الخدمات</button>
+        <button class="nav-link" onclick="navTo('#results')">النتائج</button>
+        <button class="nav-link" onclick="navTo('#process')">كيف نعمل</button>
+      </div>
+      <button class="btn btn-gold nav-cta" onclick="navTo('#contact')">احجز استشارة مجانية</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        النظام نشط — نخدم الشركات في مصر والخليج
+      </div>
+      <h1>معادلة واحدة<br><span>تكشف هدرك وترفع أرباحك</span></h1>
+      <p class="hero-sub">
+        نبني لك هيكل تكاليف دقيق يكشف الهدر المخفي، يحدد تكلفة كل منتج وفرع،
+        ويعطيك أرقاماً حقيقية تبني عليها قرارات واثقة.
+      </p>
+      <div class="hero-btns">
+        <button class="btn btn-gold" onclick="navTo('#contact')">🚀 ابدأ الآن — مجانًا</button>
+        <button class="btn btn-outline" onclick="navTo('#process')">← شوف كيف نعمل</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num" data-count="120">0</div>
+          <div class="hero-stat-lbl">شركة استفادت</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" data-count="40" data-suffix="%">0%</div>
+          <div class="hero-stat-lbl">تخفيض التكاليف</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" data-count="6">0</div>
+          <div class="hero-stat-lbl">قطاعات نخدمها</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" data-count="30" data-suffix="+">0</div>
+          <div class="hero-stat-lbl">سنة خبرة مجمعة</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PAIN POINTS ══ -->
+<section class="pain" id="pain">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-label">المشكلة</div>
+      <h2 class="section-h">هل تعاني من <span>واحدة أو أكثر</span> من دي؟</h2>
+      <p class="section-sub">معظم الشركات بتعاني من نفس المشاكل — والحل واحد: هيكل تكاليف سليم.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card fade-up" style="transition-delay:.05s">
+        <div class="pain-icon">📉</div>
+        <div class="pain-title">الإيرادات بترتفع والأرباح بتنخفض</div>
+        <div class="pain-desc">المبيعات كويسة لكن الأرباح مش بتتحسن — ده علامة على هدر مخفي.</div>
+      </div>
+      <div class="pain-card fade-up" style="transition-delay:.1s">
+        <div class="pain-icon">❓</div>
+        <div class="pain-title">مش عارف تكلفة كل منتج بدقة</div>
+        <div class="pain-desc">بتسعّر على الحدس مش على أرقام حقيقية، وده بيخلّيك تخسر من حيث ما تعرفش.</div>
+      </div>
+      <div class="pain-card fade-up" style="transition-delay:.15s">
+        <div class="pain-icon">🗂️</div>
+        <div class="pain-title">تقارير مش بتفيدش</div>
+        <div class="pain-desc">ملفات كتير وبيانات موزعة، لكن لما بتحتاج رقم واضح مش بتلاقيه.</div>
+      </div>
+      <div class="pain-card fade-up" style="transition-delay:.2s">
+        <div class="pain-icon">🔍</div>
+        <div class="pain-title">هدر مخفي في كل مكان</div>
+        <div class="pain-desc">مواد زيادة، وقت ضايع، تكاليف غير مباشرة مش متحسبة — كلها بتاكل الهامش.</div>
+      </div>
+      <div class="pain-card fade-up" style="transition-delay:.25s">
+        <div class="pain-icon">🏪</div>
+        <div class="pain-title">مش عارف أي فرع بيكسب</div>
+        <div class="pain-desc">عندك أكتر من فرع أو خط إنتاج لكن مش عارف مين الرابح ومين الخسران.</div>
+      </div>
+      <div class="pain-card fade-up" style="transition-delay:.3s">
+        <div class="pain-icon">🤔</div>
+        <div class="pain-title">قرارات على أساس تخمين</div>
+        <div class="pain-desc">بتاخد قرارات توسع أو تسعير بدون أرقام دقيقة — ده خطر حقيقي على الشركة.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SERVICES ══ -->
+<section class="services" id="services">
+  <div class="container">
+    <div class="services-top fade-up">
+      <div>
+        <div class="section-label">خدماتنا</div>
+        <h2 class="section-h">أربع خدمات <span>تبدّل اللعبة</span></h2>
+      </div>
+      <p class="section-sub" style="max-width:320px">منظومة متكاملة لبناء وإدارة هيكل تكاليف احترافي من الصفر.</p>
+    </div>
+    <div class="srv-grid">
+      <div class="srv-card fade-up">
+        <span class="srv-num">01</span>
+        <div class="srv-icon">🏗️</div>
+        <div class="srv-title">هيكل التكاليف</div>
+        <div class="srv-desc">نبني هيكل تفصيلي لكل بند تكلفة في مشروعك — مباشر، غير مباشر، رأسمالي — مع تحديث دوري وتوثيق كامل.</div>
+        <div class="srv-tags">
+          <span class="srv-tag">تكاليف مباشرة</span>
+          <span class="srv-tag">تكاليف غير مباشرة</span>
+          <span class="srv-tag">CapEx</span>
+        </div>
+      </div>
+      <div class="srv-card fade-up" style="transition-delay:.08s">
+        <span class="srv-num">02</span>
+        <div class="srv-icon">📊</div>
+        <div class="srv-title">تحليل الربحية</div>
+        <div class="srv-desc">نحدد هامش الربح لكل منتج وفرع وخدمة بشكل منفصل، عشان تعرف بالظبط فين بيجي الفلوس وفين بيروح.</div>
+        <div class="srv-tags">
+          <span class="srv-tag">هامش المنتج</span>
+          <span class="srv-tag">تحليل الفروع</span>
+          <span class="srv-tag">نقطة التعادل</span>
+        </div>
+      </div>
+      <div class="srv-card fade-up" style="transition-delay:.12s">
+        <span class="srv-num">03</span>
+        <div class="srv-icon">📋</div>
+        <div class="srv-title">التقارير التنفيذية</div>
+        <div class="srv-desc">تقارير واضحة وسريعة للإدارة — مش جداول معقدة، لكن أرقام بتساعد على القرار فوراً.</div>
+        <div class="srv-tags">
+          <span class="srv-tag">داشبورد شهري</span>
+          <span class="srv-tag">تقرير PDF</span>
+          <span class="srv-tag">تنبيهات آلية</span>
+          <span class="srv-tag">تقارير BI</span>
+          <span class="srv-tag">Python</span>
+        </div>
+      </div>
+      <div class="srv-card fade-up" style="transition-delay:.16s">
+        <span class="srv-num">04</span>
+        <div class="srv-icon">🎓</div>
+        <div class="srv-title">تدريب الفريق</div>
+        <div class="srv-desc">مش بس بنسلم التقرير — بندرب فريقك على إدارة التكاليف باستقلالية حتى بعد انتهاء الاشتراك.</div>
+        <div class="srv-tags">
+          <span class="srv-tag">ورش عمل</span>
+          <span class="srv-tag">دعم مستمر</span>
+          <span class="srv-tag">توثيق كامل</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CLIENTS NETWORK ══ -->
+<section class="clients-net">
+  <div class="container">
+    <div class="clients-net-inner">
+
+      <!-- bubble field -->
+      <div class="clients-bubbles" id="bubbleField"></div>
+
+      <!-- text side -->
+      <div class="clients-net-text fade-up">
+        <div class="section-label">شبكة العملاء</div>
+        <h2>موثوقون في <span>قطاعات متعددة</span> حول مصر والخليج</h2>
+        <p>نخدم شركات في الأغذية والمشروبات، الصناعة، التجزئة، الخدمات الطبية، السياحة، والمقاولات — بحلول تكلفة مخصصة لكل قطاع وحجم نشاط.</p>
+        <div class="clients-net-stats">
+          <div>
+            <div class="cn-stat-val">+50</div>
+            <div class="cn-stat-lbl">عميل تم خدمتهم</div>
+          </div>
+          <div>
+            <div class="cn-stat-val">8</div>
+            <div class="cn-stat-lbl">قطاعات أساسية</div>
+          </div>
+          <div>
+            <div class="cn-stat-val">×3</div>
+            <div class="cn-stat-lbl">متوسط نمو الهامش</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ PREVIEW ══ -->
+<section class="preview" id="preview">
+  <div class="container">
+    <div class="fade-up" style="text-align:center;margin-bottom:48px">
+      <div class="section-label">نموذج تقارير</div>
+      <h2 class="section-h">شوف <span>الشغل هيبقي إزاي</span></h2>
+      <p class="section-sub" style="margin:0 auto">نموذج حقيقي لتقرير تكاليف شهري — البيانات تجريبية لأغراض العرض.</p>
+    </div>
+    <div class="mock-wrap fade-up" style="transition-delay:.08s">
+      <div class="mock-topbar">
+        <div class="mock-topbar-logo">
+          <div class="mock-topbar-ic">CT</div>
+          Costing Team — التقارير المالية
+        </div>
+        <div class="mock-topbar-date">يناير – أكتوبر 2026</div>
+      </div>
+      <div class="mock-tabs">
+        <button class="mock-tab active" onclick="switchMockTab('dash',this)">📊 داشبورد</button>
+        <button class="mock-tab" onclick="switchMockTab('pl',this)">📋 P&amp;L Statement</button>
+      </div>
+
+      <!-- ─ DASHBOARD ─ -->
+      <div id="mock-dash">
+        <div class="dash-kpis">
+          <div class="dash-kpi">
+            <div class="dash-kpi-lbl">إجمالي الإيرادات</div>
+            <div class="dash-kpi-val"><span class="dash-cnt" data-target="1250000" data-sep="true">0</span> ج</div>
+            <div class="dash-kpi-row"><span class="dash-pill up">↑ 12%</span><span style="font-size:10px;color:var(--muted)">عن الشهر السابق</span></div>
+          </div>
+          <div class="dash-kpi">
+            <div class="dash-kpi-lbl">التكاليف الإجمالية</div>
+            <div class="dash-kpi-val"><span class="dash-cnt" data-target="870000" data-sep="true">0</span> ج</div>
+            <div class="dash-kpi-row"><span class="dash-pill dn">↑ 4%</span><span style="font-size:10px;color:var(--muted)">تحت الرقابة</span></div>
+          </div>
+          <div class="dash-kpi dk">
+            <div class="dash-kpi-lbl">هامش صافي الربح</div>
+            <div class="dash-kpi-val"><span class="dash-cnt" data-target="241" data-div="10">0</span>%</div>
+            <div class="dash-kpi-row"><span class="dash-pill ok" style="background:rgba(232,166,25,.18);color:var(--gold)">↑ 2.1 نقطة YTD</span></div>
+          </div>
+          <div class="dash-kpi">
+            <div class="dash-kpi-lbl">صافي الربح</div>
+            <div class="dash-kpi-val"><span class="dash-cnt" data-target="301750" data-sep="true">0</span> ج</div>
+            <div class="dash-kpi-row"><span class="dash-pill up">✓ نقطة التعادل تجاوزنا</span></div>
+          </div>
+        </div>
+        <div class="dash-charts">
+          <div class="dash-panel">
+            <div class="dash-panel-ttl">هيكل الإيرادات — أكتوبر 2026</div>
+            <div class="dash-hbars">
+              <div class="dash-hbar-row">
+                <span class="dash-hbar-lbl">تكاليف مباشرة</span>
+                <div class="dash-htrack"><div class="dash-hfill" style="background:#E8A619" data-w="72"></div></div>
+                <span class="dash-hpct" style="color:#A87200">53.6%</span>
+              </div>
+              <div class="dash-hbar-row">
+                <span class="dash-hbar-lbl">مصاريف تشغيلية</span>
+                <div class="dash-htrack"><div class="dash-hfill" style="background:#2563EB" data-w="30"></div></div>
+                <span class="dash-hpct" style="color:#2563EB">16.0%</span>
+              </div>
+              <div class="dash-hbar-row">
+                <span class="dash-hbar-lbl">مصاريف تمويل</span>
+                <div class="dash-htrack"><div class="dash-hfill" style="background:#9333EA" data-w="4"></div></div>
+                <span class="dash-hpct" style="color:#9333EA">2.0%</span>
+              </div>
+              <div class="dash-hbar-row">
+                <span class="dash-hbar-lbl">ضرائب</span>
+                <div class="dash-htrack"><div class="dash-hfill" style="background:#DC2626" data-w="8"></div></div>
+                <span class="dash-hpct" style="color:#DC2626">4.3%</span>
+              </div>
+              <div class="dash-hbar-row">
+                <span class="dash-hbar-lbl" style="color:#16A34A;font-weight:700">صافي الربح</span>
+                <div class="dash-htrack"><div class="dash-hfill" style="background:#16A34A" data-w="32"></div></div>
+                <span class="dash-hpct" style="color:#16A34A">24.1%</span>
+              </div>
+            </div>
+          </div>
+          <div class="dash-panel">
+            <div class="dash-panel-ttl">صافي الربح الشهري — 2026</div>
+            <div class="dash-trend" id="dash-trend"></div>
+            <div class="dash-mlbls">
+              <span class="dash-mlbl">ين</span><span class="dash-mlbl">فب</span><span class="dash-mlbl">مر</span>
+              <span class="dash-mlbl">أب</span><span class="dash-mlbl">مي</span><span class="dash-mlbl">يو</span>
+              <span class="dash-mlbl">يل</span><span class="dash-mlbl">أغ</span><span class="dash-mlbl">سب</span>
+              <span class="dash-mlbl" style="color:var(--gold);font-weight:700">أك</span>
+            </div>
+          </div>
+        </div>
+        <div class="dash-insights">
+          <div class="dash-insight"><div class="dash-dot" style="background:#16A34A"></div>الإيرادات ترتفع بمعدل 2% شهرياً</div>
+          <div class="dash-insight"><div class="dash-dot" style="background:#E8A619"></div>التكاليف المباشرة مستقرة عند 53.6%</div>
+          <div class="dash-insight"><div class="dash-dot" style="background:#2563EB"></div>هامش صافي الربح تحسّن 2.1 نقطة YTD</div>
+        </div>
+      </div><!-- end mock-dash -->
+
+      <div id="mock-pl" style="display:none">
+        <div class="pl-wrap">
+          <table class="pl-tbl">
+            <thead>
+              <tr>
+                <th>البند</th>
+                <th>يناير</th><th>فبراير</th><th>مارس</th><th>أبريل</th><th>مايو</th>
+                <th>يونيو</th><th>يوليو</th><th>أغسطس</th><th>سبتمبر</th><th>أكتوبر</th>
+                <th style="color:var(--gold)">إجمالي YTD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="section-hdr"><td colspan="12">الإيرادات</td></tr>
+              <tr><td style="padding-right:24px">مبيعات المنتجات</td><td>730,000</td><td>745,000</td><td>760,000</td><td>775,000</td><td>790,000</td><td>800,000</td><td>815,000</td><td>820,000</td><td>835,000</td><td>850,000</td><td class="gold">7,920,000</td></tr>
+              <tr><td style="padding-right:24px">مبيعات الخدمات</td><td>320,000</td><td>335,000</td><td>345,000</td><td>355,000</td><td>360,000</td><td>365,000</td><td>375,000</td><td>380,000</td><td>390,000</td><td>400,000</td><td class="gold">3,625,000</td></tr>
+              <tr class="subtotal"><td>إجمالي الإيرادات</td><td>1,050,000</td><td>1,080,000</td><td>1,105,000</td><td>1,130,000</td><td>1,150,000</td><td>1,165,000</td><td>1,190,000</td><td>1,200,000</td><td>1,225,000</td><td>1,250,000</td><td class="gold">11,545,000</td></tr>
+
+              <tr class="section-hdr"><td colspan="12">تكلفة المبيعات (COGS)</td></tr>
+              <tr><td style="padding-right:24px">مواد خام وتشغيل</td><td>440,000</td><td>450,000</td><td>460,000</td><td>470,000</td><td>480,000</td><td>490,000</td><td>505,000</td><td>510,000</td><td>515,000</td><td>520,000</td><td class="neg">4,840,000</td></tr>
+              <tr><td style="padding-right:24px">عمالة مباشرة</td><td>130,000</td><td>132,000</td><td>135,000</td><td>138,000</td><td>140,000</td><td>142,000</td><td>144,000</td><td>145,000</td><td>147,000</td><td>150,000</td><td class="neg">1,403,000</td></tr>
+              <tr class="subtotal"><td>إجمالي تكلفة المبيعات</td><td>570,000</td><td>582,000</td><td>595,000</td><td>608,000</td><td>620,000</td><td>632,000</td><td>649,000</td><td>655,000</td><td>662,000</td><td>670,000</td><td class="neg">6,243,000</td></tr>
+
+              <tr class="subtotal"><td>مجمل الربح</td><td>480,000</td><td>498,000</td><td>510,000</td><td>522,000</td><td>530,000</td><td>533,000</td><td>541,000</td><td>545,000</td><td>563,000</td><td>580,000</td><td class="pos">5,302,000</td></tr>
+              <tr class="margin"><td>هامش مجمل الربح</td><td class="pos">45.7%</td><td class="pos">46.1%</td><td class="pos">46.2%</td><td class="pos">46.2%</td><td class="pos">46.1%</td><td class="pos">45.8%</td><td class="pos">45.5%</td><td class="pos">45.4%</td><td class="pos">46.0%</td><td class="pos">46.4%</td><td class="pos">45.9%</td></tr>
+
+              <tr class="section-hdr"><td colspan="12">مصاريف التشغيل</td></tr>
+              <tr><td style="padding-right:24px">إيجارات</td><td>45,000</td><td>45,000</td><td>45,000</td><td>45,000</td><td>45,000</td><td>45,000</td><td>45,000</td><td>45,000</td><td>45,000</td><td>45,000</td><td class="neg">450,000</td></tr>
+              <tr><td style="padding-right:24px">أجور إدارية</td><td>75,000</td><td>75,000</td><td>76,000</td><td>78,000</td><td>78,000</td><td>79,000</td><td>80,000</td><td>80,000</td><td>80,000</td><td>80,000</td><td class="neg">781,000</td></tr>
+              <tr><td style="padding-right:24px">تسويق وإعلان</td><td>25,000</td><td>26,000</td><td>28,000</td><td>29,000</td><td>30,000</td><td>30,000</td><td>32,000</td><td>32,000</td><td>33,000</td><td>35,000</td><td class="neg">300,000</td></tr>
+              <tr><td style="padding-right:24px">مصاريف عمومية</td><td>35,000</td><td>36,000</td><td>37,000</td><td>37,000</td><td>38,000</td><td>38,000</td><td>39,000</td><td>39,000</td><td>40,000</td><td>40,000</td><td class="neg">379,000</td></tr>
+              <tr class="subtotal"><td>إجمالي مصاريف التشغيل</td><td>180,000</td><td>182,000</td><td>186,000</td><td>189,000</td><td>191,000</td><td>192,000</td><td>196,000</td><td>196,000</td><td>198,000</td><td>200,000</td><td class="neg">1,910,000</td></tr>
+
+              <tr class="subtotal"><td>ربح التشغيل (EBIT)</td><td>300,000</td><td>316,000</td><td>324,000</td><td>333,000</td><td>339,000</td><td>341,000</td><td>345,000</td><td>349,000</td><td>365,000</td><td>380,000</td><td class="pos">3,392,000</td></tr>
+              <tr class="margin"><td>هامش ربح التشغيل</td><td class="pos">28.6%</td><td class="pos">29.3%</td><td class="pos">29.3%</td><td class="pos">29.5%</td><td class="pos">29.5%</td><td class="pos">29.3%</td><td class="pos">29.0%</td><td class="pos">29.1%</td><td class="pos">29.8%</td><td class="pos">30.4%</td><td class="pos">29.4%</td></tr>
+
+              <tr><td style="padding-right:24px">مصاريف تمويل</td><td>25,000</td><td>25,000</td><td>25,000</td><td>25,000</td><td>25,000</td><td>25,000</td><td>25,000</td><td>25,000</td><td>25,000</td><td>25,000</td><td class="neg">250,000</td></tr>
+              <tr><td style="padding-right:24px">ضرائب (15%)</td><td>41,250</td><td>43,650</td><td>44,850</td><td>46,200</td><td>47,100</td><td>47,400</td><td>48,000</td><td>48,600</td><td>51,000</td><td>53,250</td><td class="neg">471,300</td></tr>
+
+              <tr class="total"><td>صافي الربح</td><td>233,750</td><td>247,350</td><td>254,150</td><td>261,800</td><td>266,900</td><td>268,600</td><td>272,000</td><td>275,400</td><td>289,000</td><td>301,750</td><td>2,670,700</td></tr>
+              <tr class="margin"><td>هامش صافي الربح</td><td class="pos">22.3%</td><td class="pos">22.9%</td><td class="pos">23.0%</td><td class="pos">23.2%</td><td class="pos">23.2%</td><td class="pos">23.1%</td><td class="pos">22.9%</td><td class="pos">22.9%</td><td class="pos">23.6%</td><td class="pos">24.1%</td><td class="pos">23.1%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- end mock-pl -->
+
+      <div class="mock-bottombar">
+        <span>🔒 تقرير سري — Costing Team</span>
+        <span>البيانات تجريبية لأغراض العرض فقط</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RESULTS ══ -->
+<section class="results" id="results">
+  <div class="container">
+    <div class="fade-up" style="text-align:center">
+      <div class="section-label">النتائج</div>
+      <h2 class="section-h" style="color:var(--white)">النظام مصمم <span>يحرك 4 أرقام</span></h2>
+      <p class="section-sub" style="margin:0 auto">نتائج موثقة عبر شركاء عملنا معاهم في أكتر من قطاع.</p>
+    </div>
+    <div class="res-grid fade-up" style="transition-delay:.1s">
+      <div class="res-item">
+        <div class="res-num" data-count="40" data-suffix="%" data-prefix="حتى ">0%</div>
+        <div class="res-label">تخفيض في التكاليف</div>
+      </div>
+      <div class="res-item">
+        <div class="res-num" data-count="25" data-suffix="%" data-prefix="حتى ">0%</div>
+        <div class="res-label">تحسين هامش الربح</div>
+      </div>
+      <div class="res-item">
+        <div class="res-num" data-count="30" data-suffix="%" data-prefix="حتى ">0%</div>
+        <div class="res-label">تقليل الهدر</div>
+      </div>
+      <div class="res-item">
+        <div class="res-num" data-count="3" data-suffix="×">0×</div>
+        <div class="res-label">سرعة اتخاذ القرار</div>
+      </div>
+    </div>
+    <p class="res-footnote">* النتائج تختلف حسب قطاع الشركة وحجمها ووضعها الحالي</p>
+  </div>
+</section>
+
+<!-- ══ PROCESS ══ -->
+<section class="process" id="process">
+  <div class="container">
+    <div class="fade-up" style="text-align:center">
+      <div class="section-label">كيف نعمل</div>
+      <h2 class="section-h"><span>4 خطوات</span> من الصفر لهيكل تكاليف كامل</h2>
+    </div>
+    <div class="process-steps">
+      <div class="step fade-up" style="transition-delay:.05s">
+        <div class="step-circle">🔍</div>
+        <div class="step-num">01</div>
+        <div class="step-title">التشخيص</div>
+        <div class="step-desc">نحلل وضعك الحالي خلال 48 ساعة ونحدد نقاط الضعف والهدر المخفي.</div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.1s">
+        <div class="step-circle">🏗️</div>
+        <div class="step-num">02</div>
+        <div class="step-title">التصميم</div>
+        <div class="step-desc">نبني هيكل تكاليف مخصص لمشروعك بالكامل مع تصنيف كل بند بدقة.</div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.15s">
+        <div class="step-circle">⚙️</div>
+        <div class="step-num">03</div>
+        <div class="step-title">التطبيق</div>
+        <div class="step-desc">ندخل البيانات، نختبر الدقة، ونربط الهيكل بالتقارير التنفيذية.</div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.2s">
+        <div class="step-circle">🎓</div>
+        <div class="step-num">04</div>
+        <div class="step-title">التسليم والتدريب</div>
+        <div class="step-desc">نسلمك كل شيء ونتأكد إن فريقك قادر يشتغل باستقلالية.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTORS ══ -->
+<section class="sectors">
+  <div class="container">
+    <div class="fade-up" style="text-align:center">
+      <div class="section-label">القطاعات</div>
+      <h2 class="section-h">نخدم <span>قطاعات متعددة</span></h2>
+    </div>
+    <div class="sector-grid fade-up" style="transition-delay:.08s">
+      <div class="sector-pill">🍔 مطاعم وأغذية</div>
+      <div class="sector-pill">🏭 تصنيع وإنتاج</div>
+      <div class="sector-pill">🏥 قطاع طبي وصيدليات</div>
+      <div class="sector-pill">✈️ سياحة وطيران</div>
+      <div class="sector-pill">🏪 تجزئة ومتاجر</div>
+      <div class="sector-pill">🚛 لوجستيات وتوريد</div>
+      <div class="sector-pill">🏗️ مقاولات وعقارات</div>
+      <div class="sector-pill">💻 تقنية وخدمات</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA BANNER ══ -->
+<section class="cta-banner">
+  <div class="container">
+    <div class="cta-banner-inner fade-up">
+      <div class="section-label" style="justify-content:center">التحدي</div>
+      <h2>مستعد تعرف فين بيروح فلوسك؟</h2>
+      <p>استشارة مجانية 30 دقيقة — نحلل وضعك ونديك خريطة طريق واضحة.</p>
+      <div class="cta-btns">
+        <button class="btn btn-gold" onclick="navTo('#contact')">🚀 احجز استشارتك المجانية</button>
+        <button class="btn btn-outline" onclick="navTo('#services')">تعرف أكتر على الخدمات</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-label">تواصل معنا</div>
+      <h2 class="section-h">ابدأ <span>رحلتك دلوقتي</span></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info fade-up">
+        <h3>تكلمنا — الاستشارة الأولى مجانية</h3>
+        <p>بنرد خلال 24 ساعة ونحدد معاك أسرع خطوة ممكنة لتظبيط تكاليفك وتحسين هامشك.</p>
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="contact-item-ic">📞</div>
+            <div>
+              <div>واتساب وهاتف</div>
+              <div class="contact-item-val" style="white-space:nowrap;direction:ltr;text-align:right">011 4287 7296</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-ic">🕐</div>
+            <div>
+              <div>ساعات العمل</div>
+              <div class="contact-item-val">الأحد – الخميس، 9ص – 6م</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-ic">🌐</div>
+            <div>
+              <div>طريقة العمل</div>
+              <div class="contact-item-val">أونلاين بالكامل — مصر والخليج العربي</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card fade-up" style="transition-delay:.1s" id="form-card">
+        <div class="form-title">🎯 احجز استشارتك المجانية</div>
+        <form id="contact-form" onsubmit="submitForm(event)">
+          <div class="form-row">
+            <div class="fg">
+              <label>الاسم</label>
+              <input type="text" placeholder="اسمك الكامل" required>
+            </div>
+            <div class="fg">
+              <label>رقم الهاتف</label>
+              <input type="tel" placeholder="+20 10x xxx xxxx" required>
+            </div>
+          </div>
+          <div class="fg">
+            <label>البريد الإلكتروني</label>
+            <input type="email" placeholder="email@company.com">
+          </div>
+          <div class="fg">
+            <label>اسم الشركة وقطاعها</label>
+            <input type="text" placeholder="مثال: شركة الفتح للتجارة — قطاع الغذاء" required>
+          </div>
+          <div class="fg">
+            <label>أكبر تحدي تكاليفي عندك</label>
+            <select required>
+              <option value="" disabled selected>اختار...</option>
+              <option>مش عارف تكلفة المنتج بدقة</option>
+              <option>الهامش بينخفض مع ارتفاع المبيعات</option>
+              <option>هدر غير معروف</option>
+              <option>تقارير مش مفيدة</option>
+              <option>قرارات تسعير خاطئة</option>
+              <option>تعدد الفروع وصعوبة المقارنة</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>ملاحظات إضافية (اختياري)</label>
+            <textarea placeholder="أي تفاصيل تانية تساعدنا نفهم احتياجك..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;font-size:15px;padding:14px">🚀 احجز الاستشارة المجانية</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name" style="display:flex;align-items:center;gap:10px;">
+          <svg width="32" height="32" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="42" height="42" rx="10" fill="#E8A619" fill-opacity=".12"/>
+            <rect x="7" y="29" width="7" height="9" rx="2" fill="#E8A619" opacity=".65"/>
+            <rect x="17" y="22" width="7" height="16" rx="2" fill="#E8A619" opacity=".65"/>
+            <rect x="27" y="15" width="7" height="23" rx="2" fill="#E8A619" opacity=".65"/>
+            <rect x="5" y="38.5" width="32" height="1.2" rx=".6" fill="#E8A619" opacity=".3"/>
+            <line x1="7" y1="35" x2="32" y2="7" stroke="#E8A619" stroke-width="2.2" stroke-linecap="round"/>
+            <polygon points="32,7 24,11 29,15" fill="#E8A619"/>
+          </svg>
+          Costing Team
+        </div>
+        <div class="footer-brand-desc">نحوّل التكاليف إلى ميزة تنافسية — بناء هياكل تكاليف دقيقة للشركات في مصر والخليج.</div>
+      </div>
+      <div class="footer-links">
+        <h4>الخدمات</h4>
+        <ul>
+          <li><a href="#">هيكل التكاليف</a></li>
+          <li><a href="#">تحليل الربحية</a></li>
+          <li><a href="#">التقارير التنفيذية</a></li>
+          <li><a href="#">تدريب الفريق</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>القطاعات</h4>
+        <ul>
+          <li><a href="#">مطاعم وأغذية</a></li>
+          <li><a href="#">تصنيع</a></li>
+          <li><a href="#">تجزئة</a></li>
+          <li><a href="#">خدمات وتقنية</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>تواصل</h4>
+        <ul>
+          <li><a href="#" style="direction:ltr;display:inline-block">011 4287 7296</a></li>
+          <li><a href="#">عمل أونلاين بالكامل</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Costing Team. جميع الحقوق محفوظة.</span>
+      <span>مصنوع بـ ❤️ في مصر</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAVBAR SCROLL ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ── CLIENTS BUBBLES ──
+(function() {
+  const bubbles = [
+    { label: 'مطاعم', size: 90, x: 10, y: 15, bg: '#1a2d4a', border: '#E8A619', color: '#E8A619', anim: 'float1', dur: '5.2s', delay: '0s' },
+    { label: 'صناعة\nغذائية', size: 80, x: 28, y: 5, bg: '#132035', border: '#2563EB', color: '#93B4F8', anim: 'float2', dur: '6.1s', delay: '-1.5s' },
+    { label: 'تجزئة', size: 70, x: 48, y: 10, bg: '#1a2d4a', border: '#9333EA', color: '#C084FC', anim: 'float3', dur: '4.8s', delay: '-0.8s' },
+    { label: 'خدمات\nطبية', size: 85, x: 65, y: 3, bg: '#132035', border: '#16A34A', color: '#4ADE80', anim: 'float1', dur: '5.8s', delay: '-2s' },
+    { label: 'سياحة', size: 65, x: 80, y: 18, bg: '#1a2d4a', border: '#E8A619', color: '#E8A619', anim: 'float4', dur: '6.5s', delay: '-0.3s' },
+    { label: 'مقاولات', size: 95, x: 5, y: 40, bg: '#07101E', border: '#E8A619', color: '#fff', anim: 'float2', dur: '5.5s', delay: '-1s' },
+    { label: 'توزيع', size: 72, x: 23, y: 38, bg: '#1a2d4a', border: '#2563EB', color: '#93B4F8', anim: 'float3', dur: '7s', delay: '-2.5s' },
+    { label: 'عقارات', size: 68, x: 42, y: 33, bg: '#132035', border: '#9333EA', color: '#C084FC', anim: 'float1', dur: '4.5s', delay: '-0.5s' },
+    { label: 'تكنولوجيا', size: 76, x: 60, y: 30, bg: '#1a2d4a', border: '#16A34A', color: '#4ADE80', anim: 'float4', dur: '6s', delay: '-1.8s' },
+    { label: 'طيران', size: 62, x: 78, y: 38, bg: '#132035', border: '#E8A619', color: '#E8A619', anim: 'float2', dur: '5s', delay: '-0.9s' },
+    { label: 'فنادق', size: 80, x: 15, y: 65, bg: '#1a2d4a', border: '#2563EB', color: '#93B4F8', anim: 'float3', dur: '6.3s', delay: '-1.2s' },
+    { label: 'تصنيع', size: 70, x: 35, y: 60, bg: '#07101E', border: '#E8A619', color: '#E8A619', anim: 'float1', dur: '4.9s', delay: '-2.2s' },
+    { label: 'استشارات', size: 85, x: 55, y: 58, bg: '#132035', border: '#9333EA', color: '#C084FC', anim: 'float4', dur: '5.7s', delay: '-0.6s' },
+    { label: 'لوجستيك', size: 66, x: 73, y: 62, bg: '#1a2d4a', border: '#16A34A', color: '#4ADE80', anim: 'float2', dur: '6.8s', delay: '-1.4s' },
+    { label: 'كافيهات', size: 58, x: 88, y: 55, bg: '#132035', border: '#E8A619', color: '#E8A619', anim: 'float3', dur: '5.3s', delay: '-0.2s' },
+    { label: 'ملابس', size: 73, x: 8, y: 82, bg: '#1a2d4a', border: '#2563EB', color: '#93B4F8', anim: 'float1', dur: '6.6s', delay: '-1.7s' },
+    { label: 'أدوية', size: 78, x: 28, y: 80, bg: '#07101E', border: '#16A34A', color: '#4ADE80', anim: 'float4', dur: '5.1s', delay: '-2.8s' },
+    { label: 'تعليم', size: 62, x: 48, y: 82, bg: '#132035', border: '#9333EA', color: '#C084FC', anim: 'float2', dur: '7.2s', delay: '-0.4s' },
+    { label: 'بناء\nومواد', size: 68, x: 66, y: 78, bg: '#1a2d4a', border: '#E8A619', color: '#E8A619', anim: 'float3', dur: '4.7s', delay: '-1.1s' },
+    { label: 'زراعة', size: 56, x: 83, y: 80, bg: '#132035', border: '#16A34A', color: '#4ADE80', anim: 'float1', dur: '6.4s', delay: '-2.1s' },
+  ];
+  const field = document.getElementById('bubbleField');
+  if (!field) return;
+  bubbles.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'cb';
+    el.style.cssText = `
+      width:${b.size}px; height:${b.size}px;
+      left:${b.x}%; top:${b.y}%;
+      background:${b.bg};
+      border:2px solid ${b.border};
+      animation:${b.anim} ${b.dur} ease-in-out ${b.delay} infinite;
+    `;
+    el.innerHTML = `<span class="cb-txt" style="color:${b.color};font-size:${b.size > 80 ? 12 : 10}px">${b.label.replace('\n','<br>')}</span>`;
+    field.appendChild(el);
+  });
+})();
+
+// ── DASHBOARD ──
+const monthProfits = [233750,247350,254150,261800,266900,268600,272000,275400,289000,301750];
+const monthNames = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر'];
+function initDashboard() {
+  const trendEl = document.getElementById('dash-trend');
+  if (!trendEl) return;
+  const max = Math.max(...monthProfits) * 1.1;
+  monthProfits.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'dash-mbar';
+    bar.style.height = '0';
+    bar.style.background = i === 9 ? '#E8A619' : '#2563EB';
+    bar.style.opacity = i === 9 ? '1' : '0.75';
+    bar.setAttribute('data-h', ((v / max) * 100).toFixed(1) + '%');
+    bar.innerHTML = `<div class="tip">${monthNames[i]}<br>${(v/1000).toFixed(0)}K ج</div>`;
+    trendEl.appendChild(bar);
+  });
+}
+function animateDash() {
+  document.querySelectorAll('#mock-dash .dash-cnt').forEach(el => {
+    const target = +el.dataset.target;
+    const sep = el.dataset.sep === 'true';
+    const div = el.dataset.div ? +el.dataset.div : 1;
+    const dur = 1500, start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      const val = Math.round(target * ease);
+      el.textContent = sep ? val.toLocaleString('ar-EG') : (val / div).toFixed(div > 1 ? 1 : 0);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+  document.querySelectorAll('.dash-hfill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+  document.querySelectorAll('.dash-mbar').forEach(el => { el.style.height = el.dataset.h; });
+}
+function switchMockTab(id, btn) {
+  ['dash','pl'].forEach(t => {
+    const el = document.getElementById('mock-' + t);
+    if (el) el.style.display = t === id ? '' : 'none';
+  });
+  document.querySelectorAll('.mock-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  if (id === 'dash') animateDash();
+}
+initDashboard();
+setTimeout(animateDash, 400);
+
+// ── SMOOTH SCROLL ──
+function navTo(id) {
+  const el = document.querySelector(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── COUNTER ANIMATION ──
+function animateCounter(el) {
+  const target = parseInt(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const prefix = el.dataset.prefix || '';
+  const duration = 1800;
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val = Math.round(ease * target);
+    el.textContent = prefix + val + suffix;
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = prefix + target + suffix;
+  }
+  requestAnimationFrame(step);
+}
+
+// ── INTERSECTION OBSERVER ──
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // Trigger counters inside visible elements
+      e.target.querySelectorAll('[data-count]').forEach(animateCounter);
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+// Also observe hero stats directly since they may already be visible
+setTimeout(() => {
+  document.querySelectorAll('.hero-stat-num[data-count]').forEach(el => {
+    if (!el._animated) { el._animated = true; animateCounter(el); }
+  });
+  document.querySelectorAll('.hero .fade-up').forEach(el => el.classList.add('visible'));
+}, 400);
+
+// ── FORM SUBMIT ──
+function submitForm(e) {
+  e.preventDefault();
+  const card = document.getElementById('form-card');
+  card.innerHTML = `
+    <div class="form-success">
+      <div class="form-success-icon">✅</div>
+      <h3>تم الاستلام بنجاح!</h3>
+      <p>شكراً لك! هنتواصل معاك خلال 24 ساعة لتحديد موعد الاستشارة المجانية.</p>
+      <div style="margin-top:16px;padding:16px;background:var(--light);border-radius:var(--r-sm);font-size:13px;color:var(--muted);line-height:1.8">
+        <strong style="color:var(--text)">أو تواصل معنا مباشرة على واتساب:</strong><br>
+        <span style="direction:ltr;display:inline-block">📞 011 4287 7296</span>
+      </div>
+    </div>`;
+}
+
+// ── RES NUM OBSERVER ──
+const resIo = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.res-num[data-count]').forEach(animateCounter);
+      resIo.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.res-grid').forEach(el => resIo.observe(el));
+</script>
